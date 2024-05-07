@@ -5,6 +5,7 @@ Description: SAM Template for Vapor
 Globals:
   Function:
     Timeout: 60
+    CodeUri: .
     Handler: bootstrap
     Runtime: provided.al2
     MemorySize: 512
@@ -30,8 +31,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref Garage
+        - AmazonDynamoDBFullAccess
       Events:
         VaporAppApi:
           Type: HttpApi
@@ -45,8 +45,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref Garage
+        - AmazonDynamoDBFullAccess
       Events:
         HummingbirdAppApi:
           Type: HttpApi
@@ -55,6 +54,7 @@ Resources:
             Method: ANY
     Metadata:
       BuildMethod: makefile
+    
 
 Outputs:
   CarTableArn:

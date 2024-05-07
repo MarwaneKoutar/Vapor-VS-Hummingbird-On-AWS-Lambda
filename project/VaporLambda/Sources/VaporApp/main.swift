@@ -7,9 +7,9 @@ import AWSLambdaRuntime
 
 let app = Application()
 
-let awsClient = AWSClient(credentialProvider: .environment)
+let awsClient = AWSClient(credentialProvider: .default)
 
-let dynamoDB = DynamoDB(client: awsClient, region: .euwest1)
+let dynamoDB = DynamoDB(client: awsClient, region: .euwest3)
 
 registerRoutes(app, dynamoDB: dynamoDB)
 

@@ -23,12 +23,10 @@ cp "project/VaporLambda/.build/release/$executable" "$target/"
 # add the target deps based on ldd
 ldd "project/VaporLambda/.build/release/$executable" | grep swift | awk '{print $3}' | xargs cp -Lv -t "$target"
 
-# zip the executable and its dependencies
-cd "$target"
-ln -s "$executable" "bootstrap"
-zip --symlinks VaporApp.zip *
-
-# move the zip to the output directory
+# move the whole folder (it's contents) to the output directory
 cd "$root"
-ls -la
-mv "$target/VaporApp.zip" "$output"
+mv "$target"/* "$output"
+
+# make symbolic link to the executable in the output directory
+cd "$output"
+ln -s "$executable" "bootstrap"
