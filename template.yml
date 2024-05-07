@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for Vapor
+
+Globals:
+  Function:
+    Timeout: 60
+    Handler: bootstrap
+    Runtime: provided.al2
+    MemorySize: 512
+    Architectures:
+      - arm64
+
+Resources:
+  Garage:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Garage
+      AttributeDefinitions:
+        - AttributeName: carID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: carID
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  VaporApp:
+    Type: AWS::Serverless::Function
+    Properties:
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref Garage
+      Events:
+        VaporAppApi:
+          Type: HttpApi
+          Properties:
+            Path: /vaporapp
+            Method: ANY
+    Metadata:
+      BuildMethod: makefile
+
+  HummingbirdApp:
+    Type: AWS::Serverless::Function
+    Properties:
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref Garage
+      Events:
+        HummingbirdAppApi:
+          Type: HttpApi
+          Properties:
+            Path: /hummingbirdapp
+            Method: ANY
+    Metadata:
+      BuildMethod: makefile
+
+Outputs:
+  CarTableArn:
+    Value: !GetAtt Garage.Arn
+    Export:
+      Name: CarTableArn
+  
+  VaporAppApi:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/vaporapp"
+    Export:
+      Name: VaporAppApi
+
+  HummingbirdAppApi:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/hummingbirdapp"
+    Export:
+      Name: HummingbirdAppApi
