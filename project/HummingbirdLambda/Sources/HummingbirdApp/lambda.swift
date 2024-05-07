@@ -42,7 +42,7 @@ struct AppLambda: APIGatewayLambdaFunction {
             allowHeaders: [.contentType],
             allowMethods: [.get, .options, .post, .delete, .patch]
         ))
-        GarageController(dynamoDB: dynamoDB, tableName: tableName).addRoutes(to: router.group("cars"))
+        GarageController(dynamoDB: dynamoDB, tableName: tableName).addRoutes(to: router.group("hummingbirdapp/cars"))
 
         return router.buildResponder()
     }

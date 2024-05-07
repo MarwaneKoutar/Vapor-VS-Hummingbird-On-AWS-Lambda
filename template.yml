@@ -36,7 +36,7 @@ Resources:
         VaporAppApi:
           Type: HttpApi
           Properties:
-            Path: /vaporapp
+            Path: /vaporapp/cars
             Method: ANY
     Metadata:
       BuildMethod: makefile
@@ -51,7 +51,7 @@ Resources:
         HummingbirdAppApi:
           Type: HttpApi
           Properties:
-            Path: /hummingbirdapp
+            Path: /hummingbirdapp/cars
             Method: ANY
     Metadata:
       BuildMethod: makefile

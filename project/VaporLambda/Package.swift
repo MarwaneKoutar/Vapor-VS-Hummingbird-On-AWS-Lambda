@@ -12,7 +12,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "4.0.0")),
         .package(url: "https://github.com/vapor-community/vapor-aws-lambda-runtime", .upToNextMajor(from: "0.6.2")),
-        .package(url: "https://github.com/soto-project/soto.git", from: "7.0.0-alpha")
+        .package(url: "https://github.com/soto-project/soto.git", from: "7.0.0-alpha.1")
     ],
     targets: [
         .executableTarget(
