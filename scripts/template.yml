@@ -36,7 +36,7 @@ Resources:
         VaporAppApi:
           Type: HttpApi
           Properties:
-            Path: /vaporapp/cars
+            Path: /vaporapp/{proxy+}
             Method: ANY
 
   HummingbirdApp:
