@@ -49,7 +49,7 @@ Resources:
         HummingbirdAppApi:
           Type: HttpApi
           Properties:
-            Path: /hummingbirdapp/cars
+            Path: /hummingbirdapp/{proxy+}
             Method: ANY
 
 Outputs:
