@@ -1,7 +1,7 @@
 import Vapor
 import SotoDynamoDB
 
-struct CarController {
+struct GarageController {
     let dynamoDB: DynamoDB
     let tableName: String
     
@@ -11,7 +11,10 @@ struct CarController {
     }
 
     func create(req: Request) async throws -> Response {
-        let car = try req.content.decode(Car.self)
+        var car = try req.content.decode(Car.self)
+
+        car.carID = UUID()
+
         let input = DynamoDB.PutItemCodableInput(item: car, tableName: self.tableName)
         _ = try await self.dynamoDB.putItem(input)
         return try await car.encodeResponse(status: .created, for: req)
@@ -54,7 +57,7 @@ struct CarController {
         }
         
         let deleteRequest = DynamoDB.DeleteItemInput(
-            key: ["carID": .s(carWithHighestPerformanceScore.carID.uuidString)], tableName: tableName
+            key: ["carID": .s(carWithHighestPerformanceScore.carID!.uuidString)], tableName: tableName
         )
         _ = try await dynamoDB.deleteItem(deleteRequest)
         

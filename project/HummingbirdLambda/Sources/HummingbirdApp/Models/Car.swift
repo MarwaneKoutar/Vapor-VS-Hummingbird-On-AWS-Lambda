@@ -16,14 +16,14 @@ import Foundation
 import Hummingbird
 
 struct Car: ResponseCodable {
-    var carID: UUID
+    var carID: UUID?
     var color: String
     var weight: Double
     var engineDisplacement: Double
     var horsepower: Double
     var torque: Double
 
-    init(carID: UUID, color: String, weight: Double, engineDisplacement: Double, horsepower: Double, torque: Double) {
+    init(carID: UUID? = nil, color: String, weight: Double, engineDisplacement: Double, horsepower: Double, torque: Double) {
         self.carID = carID
         self.color = color
         self.weight = weight

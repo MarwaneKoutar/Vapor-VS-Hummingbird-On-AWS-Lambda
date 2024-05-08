@@ -35,7 +35,10 @@ struct GarageController {
     }
 
     @Sendable func create(_ request: Request, context: Context) async throws -> EditedResponse<Car> {
-        let car = try await request.decode(as: Car.self, context: context)
+        var car = try await request.decode(as: Car.self, context: context)
+
+        car.carID = UUID()
+
         let input = DynamoDB.PutItemCodableInput(item: car, tableName: self.tableName)
         _ = try await self.dynamoDB.putItem(input, logger: context.logger)
         return EditedResponse(status: .created, response: car)
@@ -78,7 +81,7 @@ struct GarageController {
         }
 
         let deleteRequest = DynamoDB.DeleteItemInput(
-            key: ["carID": .s(carWithHighestPerformanceScore.carID.uuidString)], tableName: tableName
+            key: ["carID": .s(carWithHighestPerformanceScore.carID!.uuidString)], tableName: tableName
         )
         _ = try await dynamoDB.deleteItem(deleteRequest, logger: context.logger)
 
