@@ -49,7 +49,7 @@ Resources:
         HummingbirdAppApi:
           Type: HttpApi
           Properties:
-            Path: /hummingbirdapp
+            Path: /hummingbirdapp/cars
             Method: ANY
 
 Outputs:
@@ -64,6 +64,6 @@ Outputs:
       Name: VaporAppApi
 
   HummingbirdAppApi:
-    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/hummingbirdapp"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/hummingbirdapp/cars"
     Export:
       Name: HummingbirdAppApi

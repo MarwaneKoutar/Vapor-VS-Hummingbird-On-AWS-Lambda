@@ -20,7 +20,7 @@ import NIO
 import SotoDynamoDB
 
 struct GarageController {
-    typealias Context = BasicLambdaRequestContext<APIGatewayRequest>
+    typealias Context = BasicLambdaRequestContext<APIGatewayV2Request>
 
     let dynamoDB: DynamoDB
     let tableName: String
@@ -28,11 +28,5 @@ struct GarageController {
     func addRoutes(to group: RouterGroup<Context>) {
         group
             .get(use: self.list)
-    }
-
-    @Sendable func list(_ request: Request, context: Context) async throws -> [Car] {
-        let input = DynamoDB.ScanInput(tableName: self.tableName)
-        let response = try await self.dynamoDB.scan(input, type: Car.self, logger: context.logger)
-        return response.items ?? []
     }
 }
