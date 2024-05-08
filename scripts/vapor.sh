@@ -1,14 +1,15 @@
 #!/bin/bash
 
-set -eu
-
 # ensure the executable is passed
-executable=$1
+executable=VaporApp
 
 # root, target, and output directories
 root=/tmp/$executable
 target=project/VaporLambda/.build/lambda/$executable
-output=.aws-sam/build/VaporApp
+output=.aws-sam/build/$executable
+
+# clean up the previous build
+rm -rf "$output"
 
 # build the executable
 cd project/VaporLambda
@@ -23,10 +24,12 @@ cp "project/VaporLambda/.build/release/$executable" "$target/"
 # add the target deps based on ldd
 ldd "project/VaporLambda/.build/release/$executable" | grep swift | awk '{print $3}' | xargs cp -Lv -t "$target"
 
-# move the whole folder (it's contents) to the output directory
-cd "$root"
-mv "$target"/* "$output"
-
-# make symbolic link to the executable in the output directory
-cd "$output"
+# zip the executable and its dependencies
+cd "$target"
 ln -s "$executable" "bootstrap"
+zip --symlinks "$executable.zip" *
+
+# Move the zip file to the output directory
+cd "$root"
+mkdir -p "$output"
+mv "$target/$executable.zip" "$output"

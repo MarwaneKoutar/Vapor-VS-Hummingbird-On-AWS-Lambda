@@ -24,25 +24,29 @@ struct AppLambda: APIGatewayLambdaFunction {
     let logger: Logger
 
     init(context: LambdaInitializationContext) {
-        self.awsClient = AWSClient(credentialProvider: .environment)
+        self.awsClient = AWSClient(credentialProvider: .default)
         self.logger = context.logger
     }
 
     func buildResponder() -> some HTTPResponder<Context> {
-        let tableName = Environment.shared.get("GARAGE_TABLE_NAME") ?? "Garage"
-        self.logger.info("Using table \(tableName)")
-        let dynamoDB = DynamoDB(client: awsClient, region: .eunorth1)
+        // let tableName = Environment.shared.get("GARAGE_TABLE_NAME") ?? "Garage"
+        // self.logger.info("Using table \(tableName)")
+        // let dynamoDB = DynamoDB(client: awsClient, region: .euwest3)
 
         let router = Router(context: Context.self)
         // middleware
-        router.middlewares.add(ErrorMiddleware())
-        router.middlewares.add(LogRequestsMiddleware(.debug))
-        router.middlewares.add(CORSMiddleware(
-            allowOrigin: .originBased,
-            allowHeaders: [.contentType],
-            allowMethods: [.get, .options, .post, .delete, .patch]
-        ))
-        GarageController(dynamoDB: dynamoDB, tableName: tableName).addRoutes(to: router.group("hummingbirdapp/cars"))
+        // router.middlewares.add(ErrorMiddleware())
+        // router.middlewares.add(LogRequestsMiddleware(.debug))
+        // router.middlewares.add(CORSMiddleware(
+        //     allowOrigin: .originBased,
+        //     allowHeaders: [.contentType],
+        //     allowMethods: [.get, .options, .post, .delete, .patch]
+        // ))
+        //GarageController(dynamoDB: dynamoDB, tableName: tableName).addRoutes(to: router.group("hummingbirdapp/cars"))
+
+        router.get("hummingbirdapp") { request, _ -> String in
+            return "Hello"
+        }
 
         return router.buildResponder()
     }

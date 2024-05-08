@@ -32,6 +32,24 @@ struct Car: ResponseCodable {
         self.torque = torque
     }
 
+    mutating func update(from car: EditCar) {
+        if let color = car.color {
+            self.color = color
+        }
+        if let weight = car.weight {
+            self.weight = weight
+        }
+        if let engineDisplacement = car.engineDisplacement {
+            self.engineDisplacement = engineDisplacement
+        }
+        if let horsepower = car.horsepower {
+            self.horsepower = horsepower
+        }
+        if let torque = car.torque {
+            self.torque = torque
+        }
+    }
+
     mutating func update(from car: Car) {
         self.color = car.color
         self.weight = car.weight
@@ -39,4 +57,13 @@ struct Car: ResponseCodable {
         self.horsepower = car.horsepower
         self.torque = car.torque
     }
+}
+
+struct EditCar: ResponseCodable {
+    var carID: UUID?
+    var color: String?
+    var weight: Double?
+    var engineDisplacement: Double?
+    var horsepower: Double?
+    var torque: Double?
 }

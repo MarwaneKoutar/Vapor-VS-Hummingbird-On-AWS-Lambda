@@ -5,7 +5,6 @@ Description: SAM Template for Vapor
 Globals:
   Function:
     Timeout: 60
-    CodeUri: .
     Handler: bootstrap
     Runtime: provided.al2
     MemorySize: 512
@@ -30,6 +29,7 @@ Resources:
   VaporApp:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ../.aws-sam/build/VaporApp/VaporApp.zip
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
@@ -38,23 +38,19 @@ Resources:
           Properties:
             Path: /vaporapp/cars
             Method: ANY
-    Metadata:
-      BuildMethod: makefile
 
   HummingbirdApp:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ../.aws-sam/build/HummingbirdApp/HummingbirdApp.zip
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
         HummingbirdAppApi:
           Type: HttpApi
           Properties:
-            Path: /hummingbirdapp/cars
+            Path: /hummingbirdapp
             Method: ANY
-    Metadata:
-      BuildMethod: makefile
-    
 
 Outputs:
   CarTableArn:
@@ -63,7 +59,7 @@ Outputs:
       Name: CarTableArn
   
   VaporAppApi:
-    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/vaporapp"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/vaporapp/cars"
     Export:
       Name: VaporAppApi
 
