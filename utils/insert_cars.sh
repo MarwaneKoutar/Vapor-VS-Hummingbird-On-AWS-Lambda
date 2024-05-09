@@ -4,16 +4,16 @@ usage () {
     echo "Usage: $0 [<OPTIONS>] <API_URL> [<car_count>]"
     echo ""
     echo "Inserts the given amount of cars by repeatedly calling POST <API_URL>/cars with random car data"
-    echo "<car_count> defaults to 1000"
+    echo "<car_count> defaults to 500"
     echo ""
-    echo -e "-p|--parallel <task_count>\tThe number of concurrent task to use. (Default: 100)"
+    echo -e "-p|--parallel <task_count>\tThe number of concurrent tasks to use. (Default: 100)"
     echo ""
     echo "OPTIONS:"
     echo -e "-h|--help\t\t\tShow this help"
 }
 
 PARALLEL_TASKS=100
-CAR_COUNT=1000
+CAR_COUNT=500
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do

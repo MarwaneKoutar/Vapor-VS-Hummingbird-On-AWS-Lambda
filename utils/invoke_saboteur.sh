@@ -3,7 +3,7 @@
 usage () {
     echo "Usage: $0 <API_URL>"
     echo ""
-    echo "Retrieves the average advanced calculations for all cars in the garage."
+    echo "Start the saboteur scenario where the saboteur visits the garage and paints all cars in the garage with a random color."
     echo ""
     echo -e "-p|--parallel <task_count>\tThe number of concurrent tasks to use. (Default: 100)"
     echo -e "-c|--call-count <count>\tThe number of calls to make. (Default: 100)"
@@ -41,7 +41,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ ${#POSITIONAL[@]} -eq 0 ] ; then
-    echo "At least <API> is expected as argument"
+    echo "At least <API_URL> is expected as argument"
     usage
     exit 1
 fi
@@ -56,8 +56,8 @@ if [ ${#POSITIONAL[@]} -gt 1 ] ; then
     exit 1
 fi
 
-echo "Retrieving average advanced calculations for all cars in the garage.."
+echo "Starting saboteur scenario.."
 start_time=$(date +%s.%N)
-seq 1 $COUNT | xargs -Iunused -P$PARALLEL_TASKS curl -s --retry 5 --retry-connrefused -X GET "$API_URL/cars/advanced-calculations" > /dev/null
+seq 1 $COUNT | xargs -Iunused -P$PARALLEL_TASKS curl -s --retry 5 --retry-connrefused -X PUT "$API_URL/cars/saboteur" > /dev/null
 end_time=$(date +%s.%N)
-echo "Done in $(echo "$end_time - $start_time" | bc) seconds"
+echo "Scenario completed in $(echo "$end_time - $start_time" | bc) seconds"

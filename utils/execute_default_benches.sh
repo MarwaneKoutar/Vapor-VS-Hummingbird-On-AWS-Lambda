@@ -31,14 +31,14 @@ do
         shift # past argument
         shift # past value
         ;;
-        *)    # unknown option
-        POSITIONAL+=("$1") # save it in an array for later
-        shift # past argument
+        *)
+            POSITIONAL+=("$1") # save it in an array for later
+            shift # past argument
         ;;
     esac
 done
 
-if [ $(#POSITIONAL) -ne 0 ]; then
+if [ ${#POSITIONAL[@]} -ne 0 ]; then
     echo "Unknown arguments: ${POSITIONAL[@]}"
     usage
     exit 1
@@ -62,3 +62,34 @@ echo "# This will take a while and appears #"
 echo "# to hang, but don't worry!          #"
 echo "######################################"
 
+echo ./invoke_advanced-calculations.sh $VAPOR_API_URL
+./invoke_advanced-calculations.sh $VAPOR_API_URL
+
+echo ./invoke_advanced-calculations.sh $HUMMINGBIRD_API_URL
+./invoke_advanced-calculations.sh $HUMMINGBIRD_API_URL
+
+echo ./invoke_saboteur.sh $VAPOR_API_URL
+./invoke_saboteur.sh $VAPOR_API_URL
+
+echo ./invoke_saboteur.sh $HUMMINGBIRD_API_URL
+./invoke_saboteur.sh $HUMMINGBIRD_API_URL
+
+echo python3 ./clear_dynamodb_table.py Garage
+python3 ./clear_dynamodb_table.py Garage
+
+echo ./insert_cars.sh $VAPOR_API_URL
+./insert_cars.sh $VAPOR_API_URL
+
+echo ./invoke_fiscal-inspection.sh $VAPOR_API_URL
+./invoke_fiscal-inspection.sh $VAPOR_API_URL
+
+echo python3 ./clear_dynamodb_table.py Garage
+python3 ./clear_dynamodb_table.py Garage
+
+echo ./insert_cars.sh $HUMMINGBIRD_API_URL
+./insert_cars.sh $HUMMINGBIRD_API_URL
+
+echo ./invoke_fiscal-inspection.sh $HUMMINGBIRD_API_URL
+./invoke_fiscal-inspection.sh $HUMMINGBIRD_API_URL
+
+echo Done.
