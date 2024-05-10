@@ -1,13 +1,18 @@
 import Vapor
 import SotoDynamoDB
 
-struct GarageController {
+struct GarageController: RouteCollection {
     let dynamoDB: DynamoDB
     let tableName: String
-    
-    init(dynamoDB: DynamoDB, tableName: String) {
-        self.dynamoDB = dynamoDB
-        self.tableName = tableName
+
+    func boot(routes: RoutesBuilder) throws {
+        let cars = routes.grouped("vaporapp", "cars")
+        
+        cars.get(use: list)
+        cars.post(use: create)
+        cars.get("advanced-calculations", use: getAdvancedCalculations)
+        cars.delete("fiscal-inspection", use: startFiscalInspection)
+        cars.put("saboteur", use: startSaboteur)
     }
 
     func create(req: Request) async throws -> Response {
