@@ -1,0 +1,2 @@
+Lambda,coldStart,count,avgDuration,minDuration,maxDuration,StdDevDuration,avgBilled,minBilled,maxBilled,StdDevBilled,avgRam,minRam,maxRam,StdDevRam
+,0,500,8.0627,5.28,29.77,3.835,8.558,6,30,3.8412,66.1144,62.9425,72.4792,1.1585
