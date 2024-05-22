@@ -3,17 +3,15 @@
 usage () {
     echo "Usage: $0 <API_URL>"
     echo ""
-    echo "Retrieves the average advanced calculations for all cars in the garage."
+    echo "Retrieves the average performance score for random cars."
     echo ""
-    echo -e "-p|--parallel <task_count>\tThe number of concurrent tasks to use. (Default: 100)"
-    echo -e "-c|--call-count <count>\tThe number of calls to make. (Default: 100)"
+    echo -e "-p|--parallel <task_count>\tThe number of concurrent tasks to use. (Default: 20)"
     echo ""
     echo "OPTIONS:"
     echo -e "-h|--help\t\t\tShow this help"
 }
 
-PARALLEL_TASKS=100
-COUNT=100
+PARALLEL_TASKS=20
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
@@ -25,11 +23,6 @@ while [[ $# -gt 0 ]]; do
         ;;
         -p|--parallel)
             PARALLEL_TASKS="$2"
-            shift # past argument
-            shift # past value
-        ;;
-        -c|--call-count)
-            COUNT="$2"
             shift # past argument
             shift # past value
         ;;
@@ -56,8 +49,17 @@ if [ ${#POSITIONAL[@]} -gt 1 ] ; then
     exit 1
 fi
 
-echo "Retrieving average advanced calculations for all cars in the garage.."
+echo "Retrieving average performance score for random cars.."
 start_time=$(date +%s.%N)
-seq 1 $COUNT | xargs -Iunused -P$PARALLEL_TASKS curl -s --retry 5 --retry-connrefused -X GET "$API_URL/cars/advanced-calculations" > /dev/null
+request_counter=0
+for ((i=1; i<=1000; i++)); do
+    curl -s --retry 5 --retry-connrefused -X GET "$API_URL/cars/simulated-performance" > /dev/null &
+    ((request_counter++))
+    if [ $request_counter -eq $PARALLEL_TASKS ]; then
+        wait
+        request_counter=0
+    fi
+done
+wait
 end_time=$(date +%s.%N)
-echo "Done in $(echo "$end_time - $start_time" | bc) seconds"
+echo "Done in $(echo "scale=3; ($end_time - $start_time) / 1" | bc) seconds"

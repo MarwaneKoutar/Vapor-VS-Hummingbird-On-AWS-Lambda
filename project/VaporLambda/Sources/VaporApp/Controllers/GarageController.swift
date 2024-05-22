@@ -1,6 +1,11 @@
 import Vapor
 import SotoDynamoDB
 
+struct PerformanceResponse: Content {
+    let averagePerformanceScore: Double
+    let cars: [Car]
+}
+
 struct GarageController: RouteCollection {
     let dynamoDB: DynamoDB
     let tableName: String
@@ -10,7 +15,7 @@ struct GarageController: RouteCollection {
         
         cars.get(use: list)
         cars.post(use: create)
-        cars.get("advanced-calculations", use: getAdvancedCalculations)
+        cars.get("simulated-performance", use: simulatedPerformance)
         cars.delete("fiscal-inspection", use: startFiscalInspection)
         cars.put("saboteur", use: startSaboteur)
     }
@@ -31,28 +36,34 @@ struct GarageController: RouteCollection {
         return scanResponse.items ?? []
     }
 
-    func getAdvancedCalculations(req: Request) async throws -> Response {
-        let cars = try await self.list(req: req)
+    func simulatedPerformance(req: Request) async throws -> PerformanceResponse {
+        let randomCars = generateRandomCars(10)
+        let performanceScores = randomCars.map { $0.calculatePerformanceScore() }
+        let averagePerformanceScore = performanceScores.reduce(0.0, +) / Double(performanceScores.count)
         
-        let totalPerformanceScore = cars.reduce(0.0) { $0 + $1.calculatePerformanceScore() }
-        let averagePerformanceScore = totalPerformanceScore / Double(cars.count)
-        
-        let totalEcoRating = cars.reduce(0.0) { $0 + $1.calculateEcoRating() }
-        let averageEcoRating = totalEcoRating / Double(cars.count)
-        
-        let responseBody: [String: Double] = [
-            "averagePerformanceScore": averagePerformanceScore,
-            "averageEcoRating": averageEcoRating
-        ]
-        
-        let jsonData = try JSONSerialization.data(withJSONObject: responseBody)
-        var buffer = ByteBufferAllocator().buffer(capacity: jsonData.count)
-        buffer.writeBytes(jsonData)
-        return Response(
-            status: .ok,
-            body: Response.Body(buffer: buffer)
+        let response = PerformanceResponse(
+            averagePerformanceScore: averagePerformanceScore,
+            cars: randomCars
         )
+        
+        return response
     }
+
+    func generateRandomCars(_ count: Int) -> [Car] {
+        var cars: [Car] = []
+        for _ in 0..<count {
+            let car = Car(
+                carID: UUID(),
+                color: ["Red", "Blue", "Green", "Yellow", "Black", "White"].randomElement()!,
+                weight: Double.random(in: 1000...3000),
+                horsepower: Double.random(in: 100...400),
+                torque: Double.random(in: 100...400)
+            )
+            cars.append(car)
+        }
+        return cars
+    }
+
 
     func startFiscalInspection(req: Request) async throws -> Response {
         let cars = try await self.list(req: req)

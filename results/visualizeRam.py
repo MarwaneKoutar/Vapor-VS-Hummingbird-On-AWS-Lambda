@@ -5,10 +5,10 @@ import os
 
 # Read the CSV files (change the file names if necessary)
 # Hummingbird
-hummingbird = "./results/csv/saboteur-hummingbird.csv"
+hummingbird = "./results/csv/advanced-calc-hum.csv"
 df1 = pd.read_csv(hummingbird) if os.path.exists(hummingbird) else pd.DataFrame()
 # Vapor
-vapor = "./results/csv/saboteur-vapor.csv"
+vapor = "./results/csv/advanced-calc-vap.csv"
 df2 = pd.read_csv(vapor) if os.path.exists(vapor) else pd.DataFrame()
 
 # Extracting data for plotting

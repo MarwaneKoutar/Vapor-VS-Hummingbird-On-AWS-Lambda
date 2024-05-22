@@ -5,6 +5,11 @@ import HummingbirdLambda
 import NIO
 import SotoDynamoDB
 
+struct PerformanceResponse: Codable {
+    let averagePerformanceScore: Double
+    let cars: [Car]
+}
+
 struct GarageController {
     typealias Context = BasicLambdaRequestContext<APIGatewayV2Request>
 
@@ -15,7 +20,7 @@ struct GarageController {
         group
             .post(use: self.create)
             .get(use: self.list)
-            .get("advanced-calculations", use: self.getAdvancedCalculations)
+            .get("simulated-performance", use: self.simulatedPerformance)
             .delete("fiscal-inspection", use: self.startFiscalInspection)
             .put("saboteur", use: self.startSaboteur)
     }
@@ -36,27 +41,39 @@ struct GarageController {
         return response.items ?? []
     }
 
-    @Sendable func getAdvancedCalculations(_ request: Request, context: Context) async throws -> Response {
-        let cars = try await self.list(request, context: context)
-
-        let totalPerformanceScore = cars.reduce(0.0) { $0 + $1.calculatePerformanceScore() }
-        let averagePerformanceScore = totalPerformanceScore / Double(cars.count)
-
-        let totalEcoRating = cars.reduce(0.0) { $0 + $1.calculateEcoRating() }
-        let averageEcoRating = totalEcoRating / Double(cars.count)
-
-        let responseBody: [String: Double] = [
-            "averagePerformanceScore": averagePerformanceScore,
-            "averageEcoRating": averageEcoRating
-        ]
+    @Sendable func simulatedPerformance(_ request: Request, context: Context) async throws -> Response {
+        let randomCars = generateRandomCars(10)
+        let performanceScores = randomCars.map { $0.calculatePerformanceScore() }
+        let averagePerformanceScore = performanceScores.reduce(0.0, +) / Double(performanceScores.count)
         
-        let jsonData = try JSONSerialization.data(withJSONObject: responseBody)
+        let response = PerformanceResponse(
+            averagePerformanceScore: averagePerformanceScore,
+            cars: randomCars
+        )
+        
+        let jsonData = try JSONEncoder().encode(response)
         var buffer = context.allocator.buffer(capacity: jsonData.count)
-            buffer.writeBytes(jsonData)
+        buffer.writeBytes(jsonData)
+        
         return Response(
             status: .ok,
-            body: ResponseBody(byteBuffer: buffer)
+            body: .init(byteBuffer: buffer)
         )
+    }
+
+    func generateRandomCars(_ count: Int) -> [Car] {
+        var cars: [Car] = []
+        for _ in 0..<count {
+            let car = Car(
+                carID: UUID(),
+                color: ["Red", "Blue", "Green", "Yellow", "Black", "White"].randomElement()!,
+                weight: Double.random(in: 1000...3000),
+                horsepower: Double.random(in: 100...400),
+                torque: Double.random(in: 100...400)
+            )
+            cars.append(car)
+        }
+        return cars
     }
 
     @Sendable func startFiscalInspection(_ request: Request, context: Context) async throws -> Response {

@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird.git",
       "state" : {
-        "revision" : "23bedac5340dc34f32e6e327556df1d11bc94be1",
-        "version" : "2.0.0-beta.4"
+        "branch" : "main",
+        "revision" : "aed1e369c331f2c20780317e657d139e20522ada"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hummingbird-project/hummingbird-lambda.git",
       "state" : {
-        "revision" : "ddb3382814554717c4a91ce2f3d73a1f4bc05a45",
-        "version" : "2.0.0-beta.2"
+        "branch" : "main",
+        "revision" : "c1baaf18e9f6d093b365b9e68e37d595ac02e4f5"
       }
     },
     {
@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-extras/swift-extras-base64.git",
       "state" : {
-        "revision" : "97237cf1bc1feebaeb0febec91c1e1b9e4d839b3",
-        "version" : "0.7.0"
+        "revision" : "dc8121fdd2b444c97d6b0534e8ad4ddecbe0d5f4",
+        "version" : "1.0.0"
       }
     },
     {
